@@ -1,0 +1,36 @@
+Checks: '
+-*,
+performance-*,
+modernize-*,
+readability-*,
+clang-analyzer-*,
+portability-restrict-system-includes,
+bugprone-suspicious-semicolon,
+-modernize-use-trailing-return-type,
+-modernize-avoid-c-arrays,
+-modernize-make-shared,
+-modernize-make-unique,
+-modernize-use-auto,
+-modernize-use-uncaught-exceptions,
+-performance-no-int-to-ptr,
+-readability-make-member-function-const,
+-readability-magic-numbers,
+-readability-uppercase-literal-suffix,
+-readability-convert-member-functions-to-static,
+-clang-diagnostic-pessimizing-move'
+HeaderFilterRegex: '*Game/Source/.*'
+CheckOptions:
+  - key:    modernize-use-transparent-functors.SafeMode
+    value:  'true'
+  - key:		modernize-use-nullptr.NullMacros
+    value:	'NULL'
+  - key:		readability-braces-around-state.ShortStatementLines
+    value:	'3'
+  - key:		readability-inconsistent-declaration-parameter-name.Strict
+    value:	'true'
+  - key:		readability-uniqueptr-delete-release.PreferResetCall
+    value:	'true'
+  - key:		performance-move-const-arg.CheckTriviallyCopyableMove
+    value:	'false'
+  - key:		readability-implicit-bool-conversion.AllowIntegerConditions
+    value:	'true'
