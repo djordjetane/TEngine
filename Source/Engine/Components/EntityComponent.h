@@ -10,9 +10,17 @@ namespace Component {
     {
     };
 
-    struct Input : IEntityComponent
+    struct KeyInput : IEntityComponent
     {
         std::vector<KeyEvent> Events;
+    };
+
+    struct MInput : IEntityComponent
+    {
+        // double Xpos, Ypos;
+        Vec2 PositionOffset{0.f};
+        double ScrollOffset = 0.0;
+        float  Sensitivity  = 0.1f;
     };
 
     struct Player : IEntityComponent
@@ -26,7 +34,7 @@ namespace Component {
         float friction = 0.f;
     };
 
-    struct HealthComponent : IEntityComponent
+    struct Health : IEntityComponent
     {
         float MaxHealth;
         float CurrentHealth;

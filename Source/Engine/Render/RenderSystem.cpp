@@ -33,15 +33,16 @@ void Render::RenderSystem::Update() const
         return;
     }
 
-    auto* camera = cameras[0];
-
     auto renderables{m_EntityManager->GetEntitiesWithAnyComponents<Component::Material, Component::Sprite>()};
-    m_Renderer->DrawEntities(renderables, camera);
 
-    auto cubeMap{m_EntityManager->GetEntitiesWithComponents<Component::Sky>().at(0)};
-    if(cubeMap != nullptr)
-        m_Renderer->DrawCubeMap(cubeMap, camera);
+    for (auto *camera : cameras)
+    {
+        m_Renderer->DrawEntities(renderables, camera);
 
+        auto cubeMap{m_EntityManager->GetEntitiesWithComponents<Component::Sky>().at(0)};
+        if (cubeMap != nullptr)
+            m_Renderer->DrawCubeMap(cubeMap, camera);
+    }
     m_Renderer->EndScene();
 }
 
@@ -51,4 +52,7 @@ Window::Window* Render::RenderSystem::GetWindow() const { return m_Renderer->m_W
 
 Render::ShaderManager* Render::RenderSystem::GetShaders() const { return m_Renderer->m_ShaderManager; }
 
-Render::RenderSystem::~RenderSystem() {}
+Render::RenderSystem::~RenderSystem()
+{
+	delete m_Renderer;
+}

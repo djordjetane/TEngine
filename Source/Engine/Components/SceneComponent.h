@@ -44,7 +44,7 @@ namespace Component {
 
     struct Camera : ISceneComponent
     {
-        Render::BasicCamera camera;
+        Render::BasicCamera camera{};
 
         [[nodiscard]] const Mat4& GetProjection() const { return camera.GetProjection(); }
     };

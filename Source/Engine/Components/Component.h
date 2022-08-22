@@ -17,7 +17,8 @@ namespace Component {
         template <typename T>
         static unsigned GetComponentTypeID()
         {
-            static_assert(std::is_base_of<IComponent, T>::value, "Not a component");
+            // static_assert(std::is_base_of<IComponent, T>::value, "Not a component");
+            static_assert(std::is_base_of_v<IComponent, T>, "Not a component");
             static Uint typeID = m_MaxComponentTypeId++;
             return typeID;
         }

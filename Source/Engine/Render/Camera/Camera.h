@@ -30,12 +30,12 @@ namespace Render {
         [[nodiscard]] float GetCameraZoom() const;
 
         [[nodiscard]] const Vec3& GetCameraFront() const;
-        [[nodiscard]] glm::quat Camera::GetOrientation() const;
+        [[nodiscard]] Quat Camera::GetOrientation() const;
         [[nodiscard]] Vec3 Camera::GetRotation() const;
 
 
-        void ProcessMouseMovement(float xoffset, float yoffset);
-        void ProcessMouseScroll(float yoffset);
+        void UpdateMovement(float xoffset, float yoffset);
+        void UpdateZoom(float yoffset);
 
     private:
         Mat4 m_View{Math::I4};
@@ -48,8 +48,7 @@ namespace Render {
         float m_Yaw              = -90.f;
         float m_Pitch            = 0.f;
         float m_MovementSpeed    = 4.5f;
-        float m_MouseSensitivity = 0.1f;
-        float m_FOV              = 45.f;
+        float m_FOVy              = 45.f;
 
         /* Bounds */
         const float constrainPitchBound = 89.f;

@@ -3,8 +3,9 @@
 #include "Camera.h"
 
 namespace Render {
-    Camera::Camera(float fov) // option for ortho ??
-        : BasicCamera(Math::PerspectiveMatrix(fov, WindowData::GetAspect(), 0.1f, 1000.f))
+    Camera::Camera(float fovyRad) // option for ortho ??
+        :
+        BasicCamera(Math::PerspectiveMatrix(fovyRad, WindowData::GetAspect(), 0.1f, 1000.f))
     {
     }
 
@@ -20,7 +21,7 @@ namespace Render {
 
     void Camera::LookLeft() { cameraPos -= cameraSpeed * Math::Normalize(Math::Cross(cameraFront, cameraUp)); }
 
-    glm::mat4 Camera::LookAt() const { return Math::ViewMatirx(cameraPos, cameraPos + cameraFront, cameraUp); }
+    Mat4 Camera::LookAt() const { return Math::ViewMatirx(cameraPos, cameraPos + cameraFront, cameraUp); }
 
     void Camera::SetCameraSpeed(float dt) { cameraSpeed = m_MovementSpeed * dt; }
 
@@ -28,22 +29,21 @@ namespace Render {
 
     void Camera::SetCameraPos(Vec3 pos) { cameraPos = std::move(pos); }
 
-    float Camera::GetCameraZoom() const { return m_FOV; }
+    float Camera::GetCameraZoom() const { return m_FOVy; }
 
     const glm::vec3& Camera::GetCameraFront() const { return cameraFront; }
 
-    glm::quat Camera::GetOrientation() const { return Quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f)); }
+    Quat Camera::GetOrientation() const { return Quat{glm::vec3(-m_Pitch, -m_Yaw, 0.0f)}; }
 
     Vec3 Camera::GetRotation() const
     {
-        auto q{GetOrientation()};
-        return Vec3{q.x, q.y, q.z};
+        return MakeVec3<float>(&GetOrientation()[0]);
     }
 
-    void Camera::ProcessMouseMovement(float xoffset, float yoffset)
+    void Camera::UpdateMovement(float xoffset, float yoffset)
     {
-        xoffset *= m_MouseSensitivity;
-        yoffset *= m_MouseSensitivity;
+        //xoffset *= m_MouseSensitivity;
+        //yoffset *= m_MouseSensitivity;
 
         m_Yaw += xoffset;
         m_Pitch += yoffset;
@@ -54,10 +54,10 @@ namespace Render {
         m_UpdateCameraVectors();
     }
 
-    void Camera::ProcessMouseScroll(float yoffset)
+    void Camera::UpdateZoom(float yoffset)
     {
-        m_FOV -= yoffset;
-        m_BoundAngleInRange(m_FOV, zoomLowerBound, zoomUpperBound);
+        m_FOVy -= yoffset;
+        m_BoundAngleInRange(m_FOVy, zoomLowerBound, zoomUpperBound);
     }
 
     void Camera::m_UpdateCameraVectors()

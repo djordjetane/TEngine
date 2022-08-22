@@ -11,16 +11,15 @@ namespace Game {
 
         /* Camera */
         auto entity = TMakeUnique<Entities::Entity>();
-
-        Engine::Camera renderCamera;
-        auto& trans      = entity->AddComponent<Transformation>();
+        
+        auto& trans = entity->AddComponent<Transformation>();
         trans.Position.z = 10.f;
-        // trans.Rotation = Vec3{0.f, 0.f, -90.f};
         trans.Rotation = Vec3{0.f, 0.f, -90.f};
 
-        entity->AddComponent<Component::Camera>().camera = renderCamera.GetCamera();
+        entity->AddComponent<Component::MInput>();
+        entity->AddComponent<Component::Camera>();
 
-        entity->AddComponent<Component::Input>().Events = {
+        entity->AddComponent<Component::KeyInput>().Events = {
             KeyEvent{"W"}, KeyEvent{"W", Input::EKeyEventState::REPEATED},
             KeyEvent{"S"}, KeyEvent{"S", Input::EKeyEventState::REPEATED},
             KeyEvent{"A"}, KeyEvent{"A", Input::EKeyEventState::REPEATED},
@@ -40,7 +39,8 @@ namespace Game {
         auto* camera = m_EntityManager->GetEntityById(ID);
 
         auto* move  = camera->GetComponent<Component::Movement>();
-        auto* input = camera->GetComponent<Component::Input>();
+        auto* input = camera->GetComponent<Component::KeyInput>();
+        auto* minput = camera->GetComponent<Component::MInput>();
 
         for(auto& e : input->Events)
             if(e.IsActive)
@@ -61,7 +61,17 @@ namespace Game {
                 {
                     move->Speed.x = 1.f;
                 }
+
             }
+        auto cameraTrans = camera->GetComponent<Component::Transformation>();
+
+        constexpr float constrainPitchBound  = 89.f;
+
+        cameraTrans->Rotation.z += minput->PositionOffset.x;
+        cameraTrans->Rotation.x += minput->PositionOffset.y;
+
+        cameraTrans->Rotation.x = std::max(-constrainPitchBound, cameraTrans->Rotation.x);
+        cameraTrans->Rotation.x = std::min(cameraTrans->Rotation.x, constrainPitchBound);
     }
 
 } // namespace Game

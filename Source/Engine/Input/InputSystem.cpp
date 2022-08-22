@@ -11,10 +11,10 @@ namespace Input {
         SMASSERT(window != nullptr, "Failed to init window");
         SMASSERT(entityManager != nullptr, "Failed to init entMan");
 
-        m_Window     = window;
+        ms_Window     = window;
         auto* native = window->GetNativeWindow();
 
-        m_EntityManager = entityManager;
+        ms_EntityManager = entityManager;
 #ifdef _DEBUG
         glfwSetInputMode(native, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 #else
@@ -29,27 +29,50 @@ namespace Input {
         InitAPIKeys();
         for(auto& p : KeyCode)
         {
-            m_States[p.first] = EKeyEventState::NONE;
+            ms_States[p.first] = EKeyEventState::NONE;
         }
 
         LOG_INFO("Input system initialized");
         return true;
     }
 
-    bool InputSystem::ActiveEvent(EKeyAction action, EKeyEventState state) { return m_States[action] == state; }
+    bool InputSystem::ActiveEvent(EKeyAction action, EKeyEventState state) { return ms_States[action] == state; }
 
     void InputSystem::ProcessInput(float delta)
     {
         glfwPollEvents();
         if(KeyPressed("Escape"))
         {
-            m_Window->Close();
+            ms_Window->Close();
+        }
+        
+        for(auto* comp : ms_EntityManager->GetAllComponentInstances<Component::KeyInput>())
+        {
+            for (auto &event : comp->Events)
+                event.IsActive = ActiveEvent(event.Action, event.ActionTriggerState);
+        }
+        for (auto *comp : ms_EntityManager->GetAllComponentInstances<Component::MInput>())
+        {
+            comp->PositionOffset = comp->Sensitivity * MouseStates.offset;
+            comp->ScrollOffset   = MouseStates.scrollOffset;
         }
 
-        for(auto* comp : m_EntityManager->GetAllComponentInstances<Component::Input>())
-            for(auto& event : comp->Events)
+        //MouseStates.lastX        = MouseStates.X;
+        //MouseStates.lastY        = MouseStates.Y;
+        MouseStates.offset       = Vec2{0.f};
+        MouseStates.scrollOffset = 0.f;
+        /*
+        for (auto *e : m_EntityManager->GetAllEntitiesWithComponent<Component::Input>())
+        {
+            auto *comp = e->GetComponent<Component::Input>();
+            for (auto &event : comp->Events)
                 event.IsActive = ActiveEvent(event.Action, event.ActionTriggerState);
-
+            if (e->HasComponent<Component::Camera>())
+            {
+                
+            }
+        }
+        */
         /*
         CAMERA.SetCameraSpeed(deltaTime);
 
@@ -89,7 +112,7 @@ namespace Input {
 
         ms_Mutex.lock();
 
-        m_States[APIKeyCode[key]] = action;
+        ms_States[APIKeyCode[key]] = action;
 
         ms_Mutex.unlock();
     }
@@ -98,32 +121,37 @@ namespace Input {
 
     void InputSystem::mouseCallback(GLFWwindow* window, double xpos, double ypos)
     {
-        float x_pos = static_cast<float>(xpos);
-        float y_pos = static_cast<float>(ypos);
+        //float x_pos = static_cast<float>(xpos);
+        //float y_pos = static_cast<float>(ypos);
 
-        if(InputSystem::firstMouse)
+        if (MouseStates.firstMouse)
         {
-            InputSystem::lastX      = x_pos;
-            InputSystem::lastY      = y_pos;
-            InputSystem::firstMouse = false;
+            MouseStates.offset     = Vec2{0.f};
+            MouseStates.X          = xpos;
+            MouseStates.Y          = ypos;
+            MouseStates.firstMouse = false;
         }
+        
+        //float xoffset = (x_pos - MouseStates.lastX);
+        //float yoffset = (MouseStates.lastY - y_pos); // reversed since y-coordinates go from bottom to top
 
-        float xoffset = x_pos - InputSystem::lastX;
-        float yoffset = InputSystem::lastY - y_pos; // reversed since y-coordinates go from bottom to top
+        
+        MouseStates.offset += Vec2(xpos - MouseStates.X, MouseStates.Y - ypos);
+        MouseStates.X      = xpos;
+        MouseStates.Y      = ypos;
 
-        InputSystem::lastX = x_pos;
-        InputSystem::lastY = y_pos;
 
-        // CAMERA.ProcessMouseMovement(xoffset, yoffset);
+        // CAMERA.UpdateMovement(xoffset, yoffset);
     }
 
     void InputSystem::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
     {
-        // CAMERA.ProcessMouseScroll(static_cast<float>(yoffset));
+        MouseStates.scrollOffset += yoffset;
+        // CAMERA.UpdateZoom(static_cast<float>(yoffset));
     }
 
     bool InputSystem::KeyPressed(const EKeyAction& key)
     {
-        return m_States[key] == EKeyEventState::PRESSED || m_States[key] == EKeyEventState::REPEATED;
+        return ms_States[key] == EKeyEventState::PRESSED || ms_States[key] == EKeyEventState::REPEATED;
     }
 } // namespace Input

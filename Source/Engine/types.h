@@ -65,6 +65,17 @@ using Mat3 = glm::mat3;
 using Mat4 = glm::mat4;
 using Quat = glm::quat;
 
+template<typename T>           
+constexpr auto MakeVec1 = glm::make_vec1<T>;
+template<typename T>
+constexpr auto MakeVec2 = glm::make_vec2<T>;
+template<typename T>
+constexpr auto MakeVec3 = glm::make_vec3<T>;
+template<typename T>           
+constexpr auto MakeVec4 = glm::make_vec4<T>;
+template<typename T>
+constexpr auto MakeQuat = glm::make_quat<T>;
+
 // ================================================
 
 /*** APIs ***/

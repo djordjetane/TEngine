@@ -96,7 +96,8 @@ namespace Math {
 
     inline Vec3 FrontCamera(const Vec3& rot)
     {
-        return Math::Normalize(Vec3{cos(glm::radians(rot.z)) * cos(glm::radians(rot.x)), sin(glm::radians(rot.x)),
+        return Math::Normalize(Vec3{cos(glm::radians(rot.z)) * cos(glm::radians(rot.x)), 
+									sin(glm::radians(rot.x)),
                                     sin(glm::radians(rot.z)) * cos(glm::radians(rot.x))});
     }
 
