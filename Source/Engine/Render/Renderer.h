@@ -4,9 +4,7 @@
 
 namespace Window {
     class Window;
-#ifdef _DEBUG
-    class DebugWindow;
-#endif
+	class Gui;
 } // namespace Window
 
 namespace Render {
@@ -41,9 +39,7 @@ namespace Render {
     private:
         // Windows
         Window::Window* m_Window = nullptr;
-#ifdef _DEBUG
-        Window::DebugWindow* m_DebugWindow = nullptr;
-#endif
+        Window::Gui* m_Gui = nullptr;
 
         Framebuffer* m_FrameBuff       = nullptr;
         ShaderManager* m_ShaderManager = nullptr;

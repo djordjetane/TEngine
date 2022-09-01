@@ -1,8 +1,6 @@
 #include <precomp.h>
 #include <Window/Window.h>
-#ifdef _DEBUG
-#include <Window/DebugWindow.h>
-#endif
+#include <Window/Gui.h>
 #include <Shader/ShaderManager.h>
 
 #include "Camera/Camera.h"
@@ -18,8 +16,7 @@ bool Render::Renderer::Init()
     m_Window = new Window::Window;
     SMASSERT(m_Window->Init(), "FAILED TO INIT MAIN WINDOW");
 
-    // SMASSERT(gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)), "Glad failed to load gl");
-    SMASSERT(gladLoadGLLoader((GLADloadproc)glfwGetProcAddress), "Glad failed to load gl");
+    SMASSERT(gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)), "Glad failed to load gl");
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -30,20 +27,12 @@ bool Render::Renderer::Init()
     glfwSetFramebufferSizeCallback(m_Window->GetNativeWindow(), Window::Window::FrameBufferResizeCallback);
 
     m_ShaderManager = new ShaderManager;
-    // TODO: Replace this vector
-    const std::vector<String> shaders{"sprite", "pbr", "screen", "terrain", "skybox"};
-    for(auto s : shaders)
-    {
-        SMAASSERT(m_ShaderManager->AddShader(s), "Failed to add shader: {}", s);
-    }
+    SMASSERT(m_ShaderManager->m_LoadDefaultShaders(), "Failed to load default shaders!");
 
     m_FrameBuff = new Framebuffer();
     SMASSERT(m_FrameBuff->Init(m_ShaderManager->GetShader("screen")), "Failed to initialize framebuffer");
 
-#ifdef _DEBUG
-    // m_DebugWindow = new Window::DebugWindow;
-    SMASSERT(m_DebugWindow->Init(m_Window->GetNativeWindow()), "Failed to initialize Debug Menu");
-#endif
+    SMASSERT(m_Gui->Init(m_Window->GetNativeWindow()), "Failed to initialize Debug Menu");
 
     return true;
 }
@@ -59,9 +48,7 @@ void Render::Renderer::StartScene() const
 void Render::Renderer::EndScene() const
 {
     m_FrameBuff->BindSceneEnd();
-#ifdef _DEBUG
-    m_DebugWindow->Update();
-#endif
+    m_Gui->Update();
     m_Window->Update();
 }
 
@@ -160,8 +147,8 @@ Render::Renderer::~Renderer()
 {
     delete m_FrameBuff;
 #ifdef _DEBUG
-    m_DebugWindow->Destroy();
-    delete m_DebugWindow;
+    m_Gui->Destroy();
+    delete m_Gui;
 #endif
     m_Window->Destroy();
     delete m_Window;

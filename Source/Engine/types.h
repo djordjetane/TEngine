@@ -119,13 +119,15 @@ enum EPixelDataType
  */
 enum EPixelFormat
 {
-    PF_NA   = 0,
-    PF_RED  = GL_RED,
-    PF_RG   = GL_RG,
-    PF_RGB  = GL_RGB,
-    PF_BGR  = GL_BGR,
-    PF_RGBA = GL_RGBA,
-    PF_BGRA = GL_BGRA
+    PF_NA    = 0,
+    PF_RED   = GL_RED,
+    PF_RG    = GL_RG,
+    PF_RGB   = GL_RGB,
+    PF_BGR   = GL_BGR,
+    PF_RGBA  = GL_RGBA,
+    PF_BGRA  = GL_BGRA,
+    PF_SRGB  = GL_SRGB,
+    PF_SRGBA = GL_SRGB_ALPHA
 };
 
 // GLFW
@@ -144,7 +146,7 @@ struct VertexPNT
     Vec2 TexCoords{0.f};
 };
 
-struct Vertex : public VertexPNT
+struct Vertex : VertexPNT
 {
     Vec3 Tangent{0.f};
     Vec3 Bitangent{0.f};

@@ -5,9 +5,9 @@ namespace Game {
     class Player : public IEntity
     {
     public:
-        Player() = default;
+        virtual ~Player() = default;
         bool Init(Engine::EntityManager* em, Engine::ShaderManager* sm, Engine::TextureManager* tm);
-        void Tick();
+        void Tick() override;
 
     private:
         Engine::EntityManager* m_EntityManager   = nullptr;

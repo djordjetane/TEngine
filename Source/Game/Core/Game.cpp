@@ -1,28 +1,22 @@
+#include <GameEntities.h>
 #include "Game.h"
 
-#include <GameEntities.h>
 
 namespace Game {
-    GameApp::GameApp() : Application()
-    {
-        m_Entities["PlayerCamera"] = TMakeUnique<PlayerCamera>();
-        m_Entities["Player"]       = TMakeUnique<Player>();
-        m_Entities["Sky"]          = TMakeUnique<Sky>();
-    }
-
-    GameApp::~GameApp() = default;
-
-
     bool GameApp::GameInit()
     {
-        auto* camera = static_cast<PlayerCamera*>(m_Entities["PlayerCamera"].get());
+        auto camera = TMakeUnique<PlayerCamera>();
         SMASSERT(camera->Init(m_EntityManager), "Failed to init camera");
+        m_Entities["PlayerCamera"] = std::move(camera);
 
-        auto* player = static_cast<Player*>(m_Entities["Player"].get());
+        //TUniquePtr<Player> player{};
+        auto player = TMakeUnique<Player>();
         SMASSERT(player->Init(m_EntityManager, m_RenderSystem->GetShaders(), m_TextureManager), "Failed to init ball");
+        m_Entities["Player"] = std::move(player);
 
-        auto* sky = static_cast<Sky*>(m_Entities["Sky"].get());
+        auto sky = TMakeUnique<Sky>();
         SMASSERT(sky->Init(m_EntityManager, m_RenderSystem->GetShaders(), m_TextureManager), "Failed to init sky");
+        m_Entities["Sky"] = std::move(sky);
 
         LOG_INFO("Game initialized...");
         return true;
@@ -30,9 +24,8 @@ namespace Game {
 
     void GameApp::GameUpdate(float delta)
     {
-        static_cast<PlayerCamera*>(m_Entities["PlayerCamera"].get())->Tick();
-        static_cast<Player*>(m_Entities["Player"].get())->Tick();
-        static_cast<Player*>(m_Entities["Sky"].get())->Tick();
+        for (auto &[k, e] : m_Entities)
+            e->Tick();
     }
 
     bool GameApp::GameDestroy() { return true; }

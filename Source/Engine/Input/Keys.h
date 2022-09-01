@@ -95,18 +95,15 @@ namespace Input {
         KeyCode["Y"] = EAPIKeyCode::Y;
         KeyCode["Z"] = EAPIKeyCode::Z;
 
-        KeyCode["MB1"] = EAPIKeyCode::MOUSE_BUTTON_1;
-        KeyCode["MB2"] = EAPIKeyCode::MOUSE_BUTTON_2;
-        KeyCode["MB3"] = EAPIKeyCode::MOUSE_BUTTON_3;
+        KeyCode["LMB"]  = EAPIKeyCode::MOUSE_LEFT;
+        KeyCode["RMB"]  = EAPIKeyCode::MOUSE_RIGHT;
+        KeyCode["MMB"]  = EAPIKeyCode::MOUSE_MIDDLE;
         KeyCode["MB4"] = EAPIKeyCode::MOUSE_BUTTON_4;
         KeyCode["MB5"] = EAPIKeyCode::MOUSE_BUTTON_5;
         KeyCode["MB6"] = EAPIKeyCode::MOUSE_BUTTON_6;
         KeyCode["MB7"] = EAPIKeyCode::MOUSE_BUTTON_7;
         KeyCode["MB8"] = EAPIKeyCode::MOUSE_BUTTON_8;
         KeyCode["MLast"] = EAPIKeyCode::MOUSE_LAST;
-        KeyCode["LMB"]  = EAPIKeyCode::MOUSE_LEFT;
-        KeyCode["RMB"]  = EAPIKeyCode::MOUSE_RIGHT;
-        KeyCode["MMB"]  = EAPIKeyCode::MOUSE_MIDDLE;
     }
 
     using EKeyCode = EAPIKeyCode;

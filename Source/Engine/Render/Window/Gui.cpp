@@ -4,19 +4,17 @@
 #include <imgui_impl_opengl3.h>
 
 #include "Components/Components.h"
-#include "DebugWindow.h"
+#include "Gui.h"
 
 
 /* Initialize after setting up native opengl viewport */
-bool Window::DebugWindow::Init(NativeWindow* window, EntMan* entityManager)
+bool Window::Gui::Init(NativeWindow* window, EntMan* entityManager)
 {
-#ifdef _DEBUG
     nativeWindow    = window;
     m_EntityManager = m_EntityManager ? m_EntityManager : entityManager;
-#endif
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    ImGui::GetIO().ConfigFlags |= m_ViewportsEnable ? ImGuiConfigFlags_ViewportsEnable : 0;
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -26,25 +24,24 @@ bool Window::DebugWindow::Init(NativeWindow* window, EntMan* entityManager)
     return retval && ImGui_ImplOpenGL3_Init(WindowData::glslVersion);
 }
 
-bool Window::DebugWindow::Update()
+bool Window::Gui::Update()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Debug Window", &m_DebugMenuActive, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize);
+    static bool pOpen = true;
 
-#ifdef _DEBUG
-    m_DrawGFXSettings();
+    ImGui::Begin("GuiWindow", &pOpen, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysAutoResize);
+
+    mDrawGFXSettings();
     //-------------------------------
     if(m_EntityManager != nullptr)
     {
-        m_DrawCameraMenu();
-        // m_DrawLightMenu();
-        m_DrawBallMenu();
+        mDrawEntityList();
     }
     //-------------------------------
-#endif
+
     float frametime = 1000.f / ImGui::GetIO().Framerate;
     ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", frametime, ImGui::GetIO().Framerate);
 
@@ -66,16 +63,14 @@ bool Window::DebugWindow::Update()
     return true;
 }
 
-void Window::DebugWindow::Destroy()
+void Window::Gui::Destroy()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    m_DebugMenuActive = false;
+    m_GuiActive = false;
 }
-
-#ifdef _DEBUG
 
 /*
 inline String GetLightType(LightType type)
@@ -93,7 +88,7 @@ inline String GetLightType(LightType type)
 inline static int idx = 0;
 static int size;
 /*
-void Window::DebugWindow::m_DrawLightMenu() const
+void Window::Gui::m_DrawLightMenu() const
 {
     ImGui::Text("Light");
 
@@ -165,7 +160,8 @@ void Window::DebugWindow::m_DrawLightMenu() const
     ImGui::Separator();
 }
 */
-void Window::DebugWindow::m_DrawGFXSettings() const
+
+void Window::Gui::mDrawGFXSettings() const
 {
     ImGui::Text("Graphics settings");
 
@@ -211,6 +207,23 @@ void Window::DebugWindow::m_DrawGFXSettings() const
     ImGui::Separator();
 }
 
+void Window::Gui::mDrawEntityList() const
+{
+    ImGui::Text("Scene:");
+
+    ImGui::Indent(10.f);
+    ImGui::BeginGroup();
+
+    for(auto& entity : m_EntityManager->m_Table)
+    {
+        String label{"Entity "};
+        label.append(std::to_string(entity->GetId()));
+        ImGui::Button(label.c_str());
+    }
+
+    ImGui::EndGroup();
+}
+
 // ---------------------------------------------------------------------------
 
 inline void DrawTransform(Component::Transformation* comp)
@@ -225,7 +238,8 @@ inline void DrawTransform(Component::Transformation* comp)
 
 // --------------------------------------------------------------------------------------------
 
-void Window::DebugWindow::m_DrawCameraMenu()
+/*
+void Window::Gui::m_DrawCameraMenu()
 {
     TVector<Entities::Entity*> entities =
         m_EntityManager->GetEntitiesWithComponents<Component::Camera, Component::Transformation>();
@@ -241,20 +255,18 @@ void Window::DebugWindow::m_DrawCameraMenu()
         DrawTransform(comp);
 
         // auto* camera = e->GetComponent<Component::Camera>();
-        /*
-        ImGui::Text("Position: (%.3f, %.3f, %.3f)", pos.x, pos.y, pos.z);
-        auto& pos = CAMERA.GetCameraPos();
-        ImGui::SliderFloat("Movement speed", &CAMERA.MovementSpeed, 0.f, 50.f);
-        ImGui::SliderFloat("Sensitivity", &CAMERA.MouseSensitivity, 0.f, 1.f);
-        */
+        
+        // ImGui::Text("Position: (%.3f, %.3f, %.3f)", pos.x, pos.y, pos.z);
+        // auto& pos = CAMERA.GetCameraPos();
+        // ImGui::SliderFloat("Movement speed", &CAMERA.MovementSpeed, 0.f, 50.f);
+        // ImGui::SliderFloat("Sensitivity", &CAMERA.MouseSensitivity, 0.f, 1.f);
+        
 
         ImGui::EndGroup();
     }
     ImGui::Indent(-10.f);
     ImGui::Separator();
 }
-
+*/
 // --------------------------------------------------------------------------------------------
 
-void Window::DebugWindow::m_DrawBallMenu() const { ImGui::Separator(); }
-#endif

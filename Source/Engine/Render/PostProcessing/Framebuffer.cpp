@@ -48,7 +48,6 @@ namespace Render {
         glDeleteVertexArrays(1, &m_VAO);
         glDeleteBuffers(1, &m_VBO);
         glDeleteRenderbuffers(1, &m_RBO);
-        delete shader;
     }
 
     void Framebuffer::BindSceneBegin() const

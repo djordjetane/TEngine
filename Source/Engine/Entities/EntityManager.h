@@ -2,17 +2,18 @@
 
 #include <Entities/Entity.h>
 
-#ifdef _DEBUG
-namespace Window {
-    class DebugWindow;
+namespace Engine {
+    class Application;
 }
-#endif
+
+namespace Window {
+    class Gui;
+}
 
 namespace Entities {
     class EntityManager
     {
     public:
-        EntityManager() = default;
         ~EntityManager();
         EntityManager(const EntityManager& other) = delete;
         EntityManager& operator=(EntityManager&& other) = delete;
@@ -23,10 +24,10 @@ namespace Entities {
         bool LoadEntity(TUniquePtr<Entity>&& entity);
         bool LoadEntity(Entity* entity);
 
-        Entity* GetEntityById(Uint id);
+        [[nodiscard]] Entity* GetEntityById(Uint id) const;
 
         template <typename TComponent>
-        auto GetAllEntitiesWithComponent()
+        auto GetAllEntitiesWithComponent() const
         {
             std::vector<Entity*> returnVec{};
 
@@ -42,7 +43,7 @@ namespace Entities {
         }
 
         template <typename... TComponent>
-        auto GetEntitiesWithComponents()
+        auto GetEntitiesWithComponents() const
         {
             std::vector<Entity*> returnVec{};
             for(auto& entity : m_Table)
@@ -55,7 +56,7 @@ namespace Entities {
         }
 
         template <typename... TComponent>
-        auto GetEntitiesWithAnyComponents()
+        auto GetEntitiesWithAnyComponents() const
         {
             std::vector<Entity*> returnVec{};
             for(auto& entity : m_Table)
@@ -85,8 +86,11 @@ namespace Entities {
 
     private:
         std::vector<std::unique_ptr<Entity>> m_Table{};
-#ifdef _DEBUG
-        friend Window::DebugWindow;
-#endif
+
+        EntityManager() = default;
+
+        friend Engine::Application;
+    	friend Window::Gui;
+
     };
 } // namespace Entities

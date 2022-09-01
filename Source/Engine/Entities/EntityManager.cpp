@@ -42,5 +42,5 @@ namespace Entities {
         return m_Table.back() != nullptr;
     }
 
-    Entity* EntityManager::GetEntityById(Uint id) { return id < m_Table.size() ? m_Table[id].get() : nullptr; }
+    Entity* EntityManager::GetEntityById(Uint id) const { return id < m_Table.size() ? m_Table[id].get() : nullptr; }
 } // namespace Entities

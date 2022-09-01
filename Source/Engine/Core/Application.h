@@ -29,8 +29,8 @@ namespace Engine {
         void Run();
         bool Destroy();
 
-        Entities::EntityManager* GetEntityManager();
-        Texture::TextureManager* GetTextureManager();
+        [[nodiscard]]Entities::EntityManager* GetEntityManager() const;
+        [[nodiscard]]Texture::TextureManager* GetTextureManager() const;
 
     protected:
         Entities::EntityManager* m_EntityManager  = nullptr;

@@ -48,9 +48,9 @@ namespace Engine {
         return true;
     }
 
-    Entities::EntityManager* Application::GetEntityManager() { return m_EntityManager; }
+    Entities::EntityManager* Application::GetEntityManager() const { return m_EntityManager; }
 
-    Texture::TextureManager* Application::GetTextureManager() { return m_TextureManager; }
+    Texture::TextureManager* Application::GetTextureManager() const { return m_TextureManager; }
 
     void Application::Run()
     {

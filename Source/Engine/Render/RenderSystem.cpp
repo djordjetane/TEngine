@@ -2,14 +2,14 @@
 #include "RenderSystem.h"
 #include "Components/Components.h"
 #include "Renderer.h"
-#include "Window/DebugWindow.h"
+#include "Window/Gui.h"
 
 bool Render::RenderSystem::Init(Entities::EntityManager* entityManager)
 {
     m_EntityManager                            = entityManager;
     m_Renderer                                 = new Renderer;
-    m_Renderer->m_DebugWindow                  = new Window::DebugWindow;
-    m_Renderer->m_DebugWindow->m_EntityManager = entityManager;
+    m_Renderer->m_Gui                  = new Window::Gui;
+    m_Renderer->m_Gui->m_EntityManager = entityManager;
 
     SMASSERT(m_Renderer->Init(), "Failed to init RenderSystem");
 

@@ -2,71 +2,46 @@
 Language: Cpp
 BasedOnStyle: LLVM
 AccessModifierOffset: -4
-AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: false
+AlignConsecutiveDeclarations: true
 AlignOperands: false
-AlignTrailingComments: false
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortIfStatementsOnASingleLine: false
-AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterDefinitionReturnType: false
-AlwaysBreakAfterReturnType: None
 AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: true
-BinPackParameters: false
 BraceWrapping: 
   AfterCaseLabel: true
   AfterClass: true
   AfterControlStatement: true
   AfterEnum: true
   AfterFunction: true
-  AfterNamespace: false
+  AfterNamespace: true
   AfterStruct: true
   AfterUnion: true
   AfterExternBlock: false
   BeforeCatch: true
   BeforeElse: true
+  BeforeLambdaBody: true
+  BeforeWhile: true
+  IndentBraces: false
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBraces: Custom
-BreakBeforeTernaryOperators: true
-BreakConstructorInitializers: BeforeComma
-BreakConstructorInitializersBeforeComma: false
+BreakConstructorInitializers: AfterColon
 ColumnLimit: 120
-CompactNamespaces: false
-ConstructorInitializerAllOnOneLineOrOnePerLine: true
-ContinuationIndentWidth: 4
-IncludeBlocks: Preserve
+CompactNamespaces: true
+ContinuationIndentWidth: 8
 IncludeCategories: 
-  - Regex: '<precomp.h>'
-    Priority: -1
-  - Regex: '<.*'
+  - Regex: '^<.*'
+    Priority: 1
+  - Regex: '^".*'
     Priority: 2
-  - Regex: '".*'
-    Priority: 3
   - Regex: '.*'
-    Priority: 4
-IncludeIsMainRegex: ''
-IndentCaseLabels: false
-IndentPPDirectives: None
+    Priority: 3
+IncludeIsMainRegex: '([-_](test|unittest))?$'
 IndentWidth: 4
-IndentWrappedFunctionNames: false
+MacroBlockBegin: ''
+MacroBlockEnd: ''
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All
-SpaceAfterCStyleCast: false
-SpaceAfterTemplateKeyword: true
-SpaceBeforeAssignmentOperators: true
-SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: false
-SpaceBeforeRangeBasedForLoopColon: true
-SpaceInEmptyParentheses: false
-SpacesBeforeTrailingComments: 1
-SpacesInAngles: false
-SpacesInCStyleCastParentheses: false
-SpacesInSquareBrackets: false
-PointerAlignment: Left
+SpaceAfterTemplateKeyword: false
 TabWidth: 4
-UseTab: Never
 ...

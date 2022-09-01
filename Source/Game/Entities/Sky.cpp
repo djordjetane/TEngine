@@ -1,5 +1,5 @@
-#include "Sky.h"
 #include "GameData.h"
+#include "Sky.h"
 
 namespace Game {
     bool Sky::Init(Engine::EntityManager* em, Engine::ShaderManager* sm, Engine::TextureManager* tm)

@@ -4,11 +4,9 @@
 namespace Game {
     struct IEntity;
 
-    class GameApp : public Engine::Application
+    class GameApp final : public Engine::Application
     {
     public:
-        GameApp();
-        ~GameApp() override;
         bool GameInit() override;
         void GameUpdate(float delta) override;
         bool GameDestroy() override;
@@ -19,4 +17,4 @@ namespace Game {
 
 } // namespace Game
 
-Engine::Application* Engine::NewApp() { return new Game::GameApp(); }
+inline Engine::Application* Engine::NewApp() { return new Game::GameApp(); }

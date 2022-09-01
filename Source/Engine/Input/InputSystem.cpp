@@ -22,6 +22,7 @@ namespace Input {
 #endif //_DEBUG
 
         glfwSetKeyCallback(native, keyCallback);
+        glfwSetMouseButtonCallback(native, mouseKeyCallback);
         glfwSetCursorPosCallback(native, mouseCallback);
         glfwSetScrollCallback(native, scrollCallback);
 
@@ -56,73 +57,38 @@ namespace Input {
             comp->PositionOffset = comp->Sensitivity * MouseStates.offset;
             comp->ScrollOffset   = MouseStates.scrollOffset;
         }
-
-        //MouseStates.lastX        = MouseStates.X;
-        //MouseStates.lastY        = MouseStates.Y;
+        
         MouseStates.offset       = Vec2{0.f};
         MouseStates.scrollOffset = 0.f;
-        /*
-        for (auto *e : m_EntityManager->GetAllEntitiesWithComponent<Component::Input>())
-        {
-            auto *comp = e->GetComponent<Component::Input>();
-            for (auto &event : comp->Events)
-                event.IsActive = ActiveEvent(event.Action, event.ActionTriggerState);
-            if (e->HasComponent<Component::Camera>())
-            {
-                
-            }
-        }
-        */
-        /*
-        CAMERA.SetCameraSpeed(deltaTime);
-
-        // W
-        if(KEY_PRESSED(GLFW_KEY_W))
-        {
-            CAMERA.LookUp();
-        }
-        // S
-        if(KEY_PRESSED(GLFW_KEY_S))
-        {
-            CAMERA.LookDown();
-        }
-        // D
-        if(KEY_PRESSED(GLFW_KEY_D))
-        {
-            CAMERA.LookRight();
-        }
-        // A
-        if(KEY_PRESSED(GLFW_KEY_A))
-        {
-            CAMERA.LookLeft();
-        }
-        */
     }
 
 #ifdef GLFWAPI
     inline EKeyEventState API_glfwGetKey(GLFWwindow* window, EAPIKeyCode key)
     {
-        return static_cast<EKeyEventState>(glfwGetKey(window, static_cast<int>(key)));
+    	return static_cast<EKeyEventState>(glfwGetKey(window, static_cast<int>(key)));
     }
-
+#endif
     void InputSystem::keyCallback(GLFWwindow* window, int _key, int _scancode, int _action, int _mod)
     {
         auto key    = static_cast<EAPIKeyCode>(_key);
         auto action = static_cast<EKeyEventState>(_action);
-
-        ms_Mutex.lock();
-
+        
         ms_States[APIKeyCode[key]] = action;
-
-        ms_Mutex.unlock();
     }
-#endif
 
+
+    void InputSystem::mouseKeyCallback(GLFWwindow *window, int _key, int _action, int _mods)
+    {
+        ms_States[APIKeyCode[EAPIKeyCode{_key}]] = EKeyEventState{_action};
+    }
 
     void InputSystem::mouseCallback(GLFWwindow* window, double xpos, double ypos)
     {
-        //float x_pos = static_cast<float>(xpos);
-        //float y_pos = static_cast<float>(ypos);
+        if (!KeyPressed("RMB"))
+        {
+            MouseStates.firstMouse = true;
+            return;
+        }
 
         if (MouseStates.firstMouse)
         {
@@ -131,23 +97,16 @@ namespace Input {
             MouseStates.Y          = ypos;
             MouseStates.firstMouse = false;
         }
-        
-        //float xoffset = (x_pos - MouseStates.lastX);
-        //float yoffset = (MouseStates.lastY - y_pos); // reversed since y-coordinates go from bottom to top
 
-        
         MouseStates.offset += Vec2(xpos - MouseStates.X, MouseStates.Y - ypos);
         MouseStates.X      = xpos;
         MouseStates.Y      = ypos;
 
-
-        // CAMERA.UpdateMovement(xoffset, yoffset);
     }
 
     void InputSystem::scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
     {
         MouseStates.scrollOffset += yoffset;
-        // CAMERA.UpdateZoom(static_cast<float>(yoffset));
     }
 
     bool InputSystem::KeyPressed(const EKeyAction& key)

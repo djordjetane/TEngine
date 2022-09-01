@@ -7,7 +7,7 @@ namespace Game {
     public:
         PlayerCamera();
         bool Init(Engine::EntityManager* em);
-        void Tick();
+        void Tick() override;
 
     private:
         Engine::EntityManager* m_EntityManager = nullptr;

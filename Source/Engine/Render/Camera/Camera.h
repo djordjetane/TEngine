@@ -1,11 +1,9 @@
 #pragma once
 #include "BasicCamera.h"
-#ifdef _DEBUG
-namespace Window {
-    class DebugWindow;
+namespace Window
+{
+    class Gui;
 }
-#endif
-
 namespace Render {
 
     class Camera : public BasicCamera
@@ -65,7 +63,7 @@ namespace Render {
         }
 
 #ifdef _DEBUG
-        friend Window::DebugWindow;
+        friend Window::Gui;
 #endif
     };
 

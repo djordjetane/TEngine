@@ -17,7 +17,6 @@ namespace Component {
 
     struct MInput : IEntityComponent
     {
-        // double Xpos, Ypos;
         Vec2 PositionOffset{0.f};
         double ScrollOffset = 0.0;
         float  Sensitivity  = 0.1f;
