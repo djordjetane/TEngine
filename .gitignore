@@ -10,7 +10,7 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
-Bin/*
-Build/*
-cmakebuild/*
+[Bb]in/*
+[Bb]uild/*
+[Cc]makebuild/*
 Source/imgui.ini
