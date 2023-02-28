@@ -15,6 +15,7 @@ namespace Render {
         void Bind() const;
         void Unbind() const;
         void Draw() const;
+        void DrawInstanced(int count) const;
 
         void AddVertexBuffer(VertexBuffer* vertexBuffer);
         void SetElementBuffer(ElementBuffer* elementBuffer);

@@ -4,8 +4,8 @@ namespace Window {
     bool Window::Init()
     {
         glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, WindowData::majVer);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, WindowData::minVer);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         m_nativeWindow = glfwCreateWindow(WND_WIDTH, WND_HEIGHT, WindowData::title, nullptr, nullptr);
         SMASSERT(m_nativeWindow != nullptr, "Failed to init glfwWindow");

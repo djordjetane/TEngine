@@ -6,9 +6,9 @@
 #include "Camera/Camera.h"
 #include "Components/Components.h"
 #include "PostProcessing/Framebuffer.h"
-#include "Renderer.h"
 #include "Vertex/Buffer.h"
 #include "Vertex/VertexArray.h"
+#include "Renderer.h"
 
 
 bool Render::Renderer::Init()
@@ -55,19 +55,24 @@ void Render::Renderer::EndScene() const
 
 void Render::Renderer::DrawEntities(std::vector<Entities::Entity*>& entities, Entities::Entity* camera) const
 {
+    auto *cameraComp  = camera->GetComponent<Component::Camera>();
+    auto *cameraTrans = camera->GetComponent<Component::Transformation>();
+
+    Mat4  PV          = cameraComp->GetProjection() * Math::ViewMatrix(cameraTrans->Position, cameraTrans->Rotation);
+
     for(auto* e : entities)
     {
         if(e->HasComponent<Component::Material>())
-            DrawMaterial(e, camera);
+            DrawMaterial(e, camera, PV);
         else
             DrawSprite(e, camera);
     }
 }
 
-void Render::Renderer::DrawMaterial(Entities::Entity* entity, Entities::Entity* camera) const
+void Render::Renderer::DrawMaterial(Entities::Entity* entity, Entities::Entity* camera, const Mat4& PV) const
 {
     auto* cameraTrans = camera->GetComponent<Component::Transformation>();
-    auto* cameraComp  = camera->GetComponent<Component::Camera>();
+    //auto* cameraComp  = camera->GetComponent<Component::Camera>();
 
 
     auto* material = entity->GetComponent<Component::Material>();
@@ -78,15 +83,17 @@ void Render::Renderer::DrawMaterial(Entities::Entity* entity, Entities::Entity* 
     auto* transf = entity->GetComponent<Component::Transformation>();
 
     shader->ActivateShader();
-    shader->SetMat4("PV", cameraComp->GetProjection() * Math::ViewMatrix(cameraTrans->Position, cameraTrans->Rotation));
-    shader->SetMat4("model", transf->GetModelMatrix());
-    shader->SetVec3("viewPos", cameraTrans->Position);
+    
+    shader->SetValue("PV", PV);
+    shader->SetValue("model", transf->GetModelMatrix());
+    shader->SetValue("viewPos", cameraTrans->Position);
 
     mesh->VArray.Bind();
 
     for(size_t i = 0; i < material->Textures.size(); i++)
         material->Textures[i]->Activate(i);
-    mesh->VArray.Draw();
+    mesh->VArray.DrawInstanced(100);
+    //mesh->VArray.Draw();
 
     for(size_t i = material->Textures.size(); i > 0; i--)
         material->Textures[i - 1]->Deactivate(i - 1);
@@ -107,8 +114,8 @@ void Render::Renderer::DrawSprite(Entities::Entity* entity, Entities::Entity* ca
     static auto* shader = m_ShaderManager->GetShader("sprite");
     shader->ActivateShader();
     auto* cameraComp = entity->GetComponent<Component::Camera>();
-    shader->SetMat4("PM", cameraComp->GetProjection() * transform->GetModelMatrix());
-    shader->SetVec3("spriteColor", sprite->Color);
+    shader->SetValue("PM", cameraComp->GetProjection() * transform->GetModelMatrix());
+    shader->SetValue("spriteColor", sprite->Color);
     mesh->VArray.Bind();
 
     sprite->Texture->Activate(0);
@@ -129,7 +136,7 @@ void Render::Renderer::DrawCubeMap(Entities::Entity* entity, Entities::Entity* c
 
 
     comp->Shader->ActivateShader();
-    comp->Shader->SetMat4("PV",
+    comp->Shader->SetValue("PV",
                           cameraComp->GetProjection() * Math::CubemapMatrix(transComp->Position, transComp->Rotation));
     comp->VArray.Bind();
     comp->Texture->Activate();

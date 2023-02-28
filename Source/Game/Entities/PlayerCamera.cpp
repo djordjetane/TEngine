@@ -14,7 +14,7 @@ namespace Game {
         
         auto& trans = entity->AddComponent<Transformation>();
         trans.Position.z = 10.f;
-        trans.Rotation = Vec3{0.f, 0.f, -90.f};
+        trans.Rotation = Vec3{0.f, -90.f, 0.f};
 
         entity->AddComponent<Component::MInput>();
         entity->AddComponent<Component::Camera>();
@@ -41,37 +41,52 @@ namespace Game {
         auto* move  = camera->GetComponent<Component::Movement>();
         auto* input = camera->GetComponent<Component::KeyInput>();
         auto* minput = camera->GetComponent<Component::MInput>();
+        auto  cameraTrans = camera->GetComponent<Component::Transformation>();
+
+        cameraTrans->Rotation.y += 0.1f * minput->PositionOffset.x;
+        cameraTrans->Rotation.x += 0.1f * minput->PositionOffset.y;
+
+        cameraTrans->Rotation.x = glm::clamp(cameraTrans->Rotation.x, -1.f, 1.f);
+
+        cameraTrans->Rotation.y = fmodf(cameraTrans->Rotation.y,  359.9f);
+        
+        auto front = Math::FrontCamera(cameraTrans->Rotation);
+        
+        //front.y = 0.f;
+        front = Math::Normalize(front);
+        Vec3 resultingVec{0.f,0.f,0.f};
 
         for(auto& e : input->Events)
             if(e.IsActive)
             {
                 if(e.Action == "W")
                 {
-                    move->Speed.z = -1.f;
+                    //move->Speed += front;
+                    resultingVec += front;
                 }
                 if(e.Action == "S")
                 {
-                    move->Speed.z = 1.f;
+                    //move->Speed -= front;
+                    resultingVec -= front;
                 }
                 if(e.Action == "A")
                 {
-                    move->Speed.x = -1.f;
+                    //move->Speed += Math::Normalize(Vec3{front.z, 0.f, -front.x});
+                    resultingVec += Math::Normalize(Vec3{front.z, 0.f, -front.x});
                 }
                 if(e.Action == "D")
                 {
-                    move->Speed.x = 1.f;
+                    //move->Speed += Math::Normalize(Vec3{-front.z, 0.f, front.x});
+                    resultingVec += Math::Normalize(Vec3{-front.z, 0.f, front.x});
                 }
-
             }
-        auto cameraTrans = camera->GetComponent<Component::Transformation>();
 
-        constexpr float constrainPitchBound  = 89.f;
+        
+        if(Math::Length(resultingVec) > 1.f)
+            resultingVec = Math::Normalize(resultingVec);
+        move->Speed += resultingVec;
+        
 
-        cameraTrans->Rotation.z += minput->PositionOffset.x;
-        cameraTrans->Rotation.x += minput->PositionOffset.y;
-
-        cameraTrans->Rotation.x = std::max(-constrainPitchBound, cameraTrans->Rotation.x);
-        cameraTrans->Rotation.x = std::min(cameraTrans->Rotation.x, constrainPitchBound);
     }
 
 } // namespace Game

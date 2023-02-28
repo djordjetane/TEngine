@@ -240,7 +240,7 @@ namespace Texture {
 
     ITexture* TextureManager::FindTexture(const String& name)
     {
-        auto& texIt = m_Table.find(name);
+        auto texIt = m_Table.find(name);
         if(texIt != m_Table.end())
             return texIt->second.get();
         return nullptr;

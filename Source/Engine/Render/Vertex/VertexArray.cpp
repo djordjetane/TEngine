@@ -53,9 +53,14 @@ namespace Render {
 
     void VertexArray::Draw() const { glDrawArrays(GL_TRIANGLES, 0, m_EBuffer->GetCount()); }
 
+    void VertexArray::DrawInstanced(int count) const
+    {
+        glDrawArraysInstanced(GL_TRIANGLES, 0, m_EBuffer->GetCount(), count);
+    }
+
     void VertexArray::AddVertexBuffer(VertexBuffer* vertexBuffer)
     {
-        EASSERT(vertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
+        EASSERT(!vertexBuffer->GetLayout().GetElements().empty(), "Vertex Buffer has no layout!");
 
         glBindVertexArray(m_ID);
         vertexBuffer->Bind();

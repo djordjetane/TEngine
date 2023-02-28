@@ -32,7 +32,7 @@ namespace Render {
 
         /* Entities */
         void DrawEntities(std::vector<Entities::Entity*>& entities, Entities::Entity* camera) const;
-        void DrawMaterial(Entities::Entity* entity, Entities::Entity* camera) const;
+        void DrawMaterial(Entities::Entity* entity, Entities::Entity* camera, const Mat4& PV) const;
         void DrawSprite(Entities::Entity* entity, Entities::Entity* camera) const;
         void DrawCubeMap(Entities::Entity* entity, Entities::Entity* camera) const;
 

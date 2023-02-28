@@ -1,5 +1,4 @@
 #include <precomp.h>
-
 #include "Camera.h"
 
 namespace Render {
@@ -21,7 +20,7 @@ namespace Render {
 
     void Camera::LookLeft() { cameraPos -= cameraSpeed * Math::Normalize(Math::Cross(cameraFront, cameraUp)); }
 
-    Mat4 Camera::LookAt() const { return Math::ViewMatirx(cameraPos, cameraPos + cameraFront, cameraUp); }
+    Mat4 Camera::LookAt() const { return Math::ViewMatrix(cameraPos, cameraPos + cameraFront, cameraUp); }
 
     void Camera::SetCameraSpeed(float dt) { cameraSpeed = m_MovementSpeed * dt; }
 

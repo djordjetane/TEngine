@@ -1,5 +1,5 @@
 #pragma once
-#include "types.h"
+#include <types.h>
 
 
 namespace Math {
@@ -94,14 +94,61 @@ namespace Math {
     }
 
 
-    inline Vec3 FrontCamera(const Vec3& rot)
+    //inline Vec3 FrontCamera(const Vec3& rot)
+    //{
+    //    return Math::Normalize(Vec3{cos(glm::radians(rot.z)) * cos(glm::radians(rot.y)), 
+	//								sin(glm::radians(rot.y)),
+    //                                sin(glm::radians(rot.z)) * cos(glm::radians(rot.y))});
+    //
+
+
+    /**
+     * @brief Orientation
+     * @param pitch Rotation angle around x-axis in degrees
+     * @param yaw Rotation angle around y-axis in degrees
+     *
+     */
+    inline Quat GetOrientation(float pitch, float yaw)
     {
-        return Math::Normalize(Vec3{cos(glm::radians(rot.z)) * cos(glm::radians(rot.x)), 
-									sin(glm::radians(rot.x)),
-                                    sin(glm::radians(rot.z)) * cos(glm::radians(rot.x))});
+        return Quat{Vec3{-glm::radians(pitch), -glm::radians(yaw), 0.f}};
     }
 
-    inline Mat4 ViewMatirx(const Vec3& pos, const Vec3& front, const Vec3& up)
+    /**
+     * @brief Calculating rotation vector using quaternion
+     * @param pitch Rotation angle around x-axis in degrees
+     * @param yaw Rotation angle around y-axis in degrees
+     *
+     * @returns rotation vector
+     */
+    inline Vec3 GetRotation(float pitch, float yaw)
+    {
+        return Normalize(MakeVec3<float>(&GetOrientation(pitch,yaw)[0]));
+    }
+    /*
+    inline Vec3 FrontCamera(const Vec3& rot)
+    {
+        return Math::Normalize(Vec3{cos(glm::radians(rot.y)) * cos(glm::radians(rot.x)), 
+    								sin(glm::radians(rot.x)),
+                                    sin(glm::radians(rot.y)) * cos(glm::radians(rot.x))});
+    }
+    */
+
+
+    inline Vec3 FrontCamera(Vec3&& rot)
+    {
+        return Math::Normalize(Vec3{cos(rot.y) * cos(rot.x), 
+    								sin(rot.x),
+                                    sin(rot.y) * cos(rot.x)});
+    }
+
+    inline Vec3 FrontCamera(const Vec3& rot)
+    {
+        return Math::Normalize(Vec3{cos(rot.y) * cos(rot.x), 
+    								sin(rot.x),
+                                    sin(rot.y) * cos(rot.x)});
+    }
+
+    inline Mat4 ViewMatrix(const Vec3& pos, const Vec3& front, const Vec3& up)
     {
         return glm::lookAt(pos, pos + front, up);
     }

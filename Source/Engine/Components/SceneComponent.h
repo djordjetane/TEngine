@@ -39,7 +39,7 @@ namespace Component {
         {
         }
 
-        [[nodiscard]] Mat4 const& GetModelMatrix() const { return Math::ModelMatrix(Position, Rotation, Scale); }
+        [[nodiscard]] Mat4 GetModelMatrix() const { return Math::ModelMatrix(Position, Rotation, Scale); }
     };
 
     struct Camera : ISceneComponent

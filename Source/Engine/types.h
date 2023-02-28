@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 #include <filesystem>
+#include <ranges>
 
 typedef unsigned Uint;
 typedef uint8_t Uint8;
@@ -43,6 +44,11 @@ using THashMap = std::unordered_map<K, V>;
 template <typename... Ts>
 using TTuple = std::tuple<Ts...>;
 using Mutex  = std::mutex;
+using Path = std::filesystem::path;
+using DirEnt = std::filesystem::directory_entry;    
+using DirIt  = std::filesystem::directory_iterator;
+using WString     = std::wstring;
+using WStringView = std::wstring_view;
 
 // ------------------------------------------------
 
@@ -60,6 +66,9 @@ using Vec  = glm::vec<L, T>;
 using Vec2 = glm::vec2;
 using Vec3 = glm::vec3;
 using Vec4 = glm::vec4;
+
+template <int C, int R, typename T>
+using Mat  = glm::mat<C, R, T>;
 using Mat2 = glm::mat2;
 using Mat3 = glm::mat3;
 using Mat4 = glm::mat4;

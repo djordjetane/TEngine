@@ -44,10 +44,10 @@ namespace Game {
         shader->SetValue("material.normal", 1);
         shader->SetValue("material.ao", 2);
 
-        shader->SetVec3("light[0].position", Vec3{1.2f, 5.f, -2.f});
-        shader->SetVec3("light[0].color", Vec3{150.f, 150.f, 150.f});
-        shader->SetVec3("light[1].position", Vec3{5.2f, 0.3f, 2.f});
-        shader->SetVec3("light[1].color", Vec3{150.f, 150.f, 150.f});
+        shader->SetValue("light[0].position", Vec3{1.2f, 5.f, -2.f});
+        shader->SetValue("light[0].color", Vec3{150.f, 150.f, 150.f});
+        shader->SetValue("light[1].position", Vec3{5.2f, 0.3f, 2.f});
+        shader->SetValue("light[1].color", Vec3{150.f, 150.f, 150.f});
         shader->SetValue("numLights", 2);
 
         shader->DeactivateShader();

@@ -7,8 +7,7 @@ namespace Render {
         m_Table[name] = std::make_unique<Shader>(directory + name.data());
         auto* shader  = m_Table[name].get();
         SMAASSERT(shader != nullptr, "Failed to add shader: {}", name);
-        SMAASSERT(shader->Compile(), "Failed to compile shader: {}", name);
-
+		SMAASSERT(shader->Compile(), "Failed to compile shader: {}", name);
         LOG_TRACE("Compiled {}", name);
         return true;
     }
@@ -17,7 +16,7 @@ namespace Render {
 
     bool ShaderManager::m_LoadDefaultShaders()
     {
-        constexpr std::array<StringView,5> shaders{"sprite", "pbr", "screen", "terrain", "skybox"};
+        constexpr std::array<StringView,4> shaders{"sprite", "pbr", "screen", "skybox"};
         for (auto s : shaders)
         {
             SMAASSERT(AddShader(s), "Failed to add shader: {}", s);

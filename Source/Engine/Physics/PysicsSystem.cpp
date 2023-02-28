@@ -18,7 +18,7 @@ namespace Physics {
     {
         using Transformation = Component::Transformation;
         using Movement       = Component::Movement;
-        auto moveables       = m_EntityManager->GetEntitiesWithComponents<Transformation, Movement>();
+        auto moveables = m_EntityManager->GetEntitiesWithComponents<Transformation, Movement>();
         for(auto& e : moveables)
         {
             auto* transf   = e->GetComponent<Transformation>();

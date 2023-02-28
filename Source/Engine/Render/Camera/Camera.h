@@ -28,8 +28,8 @@ namespace Render {
         [[nodiscard]] float GetCameraZoom() const;
 
         [[nodiscard]] const Vec3& GetCameraFront() const;
-        [[nodiscard]] Quat Camera::GetOrientation() const;
-        [[nodiscard]] Vec3 Camera::GetRotation() const;
+        [[nodiscard]] Quat GetOrientation() const;
+        [[nodiscard]] Vec3 GetRotation() const;
 
 
         void UpdateMovement(float xoffset, float yoffset);

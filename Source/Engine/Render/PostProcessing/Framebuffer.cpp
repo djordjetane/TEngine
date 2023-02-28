@@ -62,7 +62,7 @@ namespace Render {
         glDisable(GL_DEPTH_TEST);
 
         shader->ActivateShader();
-        shader->SetVec2("frameBufSize", WindowData::W, WindowData::H);
+        shader->SetValue("frameBufSize", WindowData::W, WindowData::H);
         shader->SetValue("AA", WindowData::fxaa);
 
         glBindVertexArray(m_VAO);

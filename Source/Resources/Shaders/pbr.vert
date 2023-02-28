@@ -19,7 +19,7 @@ uniform mat4 model;
 
 void main()
 {
-    vertOut.TexCoords = aTexCoords;
+    vertOut.TexCoords = aTexCoords;    
     vertOut.WorldPos = vec3(model * vec4(aPosition, 1.0));
     vertOut.Normal = mat3(model) * aNormal;
 

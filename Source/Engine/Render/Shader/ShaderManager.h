@@ -1,7 +1,8 @@
 #pragma once
-#include "Shader.h"
 
 namespace Render {
+    class Shader;
+
     class ShaderManager
     {
     public:

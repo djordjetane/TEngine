@@ -2,12 +2,14 @@
 
 struct WindowData
 {
-    inline static int width                   = 1280;
-    inline static int height                  = 720;
-    inline static constexpr char* title       = "GolfGL";
-    inline static constexpr char* glslVersion = "#version 330";
-    inline static bool fxaa                   = true;
-    inline static bool vsync                  = true;
+    inline static int width                         = 1280;
+    inline static int height                        = 720;
+    inline static constexpr const char* title       = "GolfGL";
+    inline static constexpr const char* glslVersion = "#version 460";
+    inline static constexpr int majVer = glslVersion[9]  - '0';
+    inline static constexpr int minVer = glslVersion[10] - '0';
+    inline static bool fxaa                         = true;
+    inline static bool vsync                        = true;
 
     // Just to avoid massive number of casting
     inline static float W = 1280.f;
